@@ -1,0 +1,16 @@
+{
+  "extends": "tslint-config-standard",
+  "linterOptions": {
+    "exclude": [
+      "**/*.json"
+    ]
+  },
+  "rules": {
+    "no-unused-expression": true,
+    "no-unused-variable": true,
+    "semicolon": [
+      true,
+      "never"
+    ]
+  }
+}
