@@ -1,6 +1,6 @@
 {
   "name": "bbot-understand-watson-tone",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "NLU adapter for analysing bBot message sentiment with IBM's Watson Tone Analyzer",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
