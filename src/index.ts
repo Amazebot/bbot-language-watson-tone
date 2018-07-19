@@ -1,86 +1,64 @@
-import 'dotenv/config'
-import { inspect } from 'util'
-import * as yargs from 'yargs'
-import * as Watson from 'watson-developer-cloud'
+import {
+  LanguageAdapter,
+  TextMessage,
+  NaturalLanguageResultsRaw
+} from 'bbot'
+import { Watson } from './watson'
 
-const watsonHost = 'https://' + process.env.WATSON_SERVICE_HOSTNAME
+export class WatsonAdapter extends LanguageAdapter {
+  name = 'watson-tone-language-adapter'
+  watson = new Watson({
+    host: 'https://' + process.env.WATSON_SERVICE_HOSTNAME || 'gateway.watsonplatform.net',
+    nluKey: process.env.WATSON_NATURAL_LANGUAGE_UNDERSTANDING_APIKEY,
+    toneKey: process.env.WATSON_TONE_ANALYZER_APIKEY
+  })
 
-/** Send text string to Watson for sentiment and tone analysis */
-function watsonAnalyze (text: string): Promise<any> {
-  const nlu: Promise<any> = new Promise((resolve, reject) => {
-    new Watson.NaturalLanguageUnderstandingV1({
-      iam_apikey: process.env.WATSON_NATURAL_LANGUAGE_UNDERSTANDING_APIKEY,
-      url: `${watsonHost}/natural-language-understanding/api`,
-      version: '2017-02-27'
-    }).analyze({
-      text, features: { sentiment: {}, keywords: {} }
-    }, (err, result) => {
-      if (err) reject(err)
-      else resolve(result)
-    })
-  })
-  const tone: Promise<any> = new Promise((resolve, reject) => {
-    new Watson.ToneAnalyzerV3({
-      iam_apikey: process.env.WATSON_TONE_ANALYZER_APIKEY,
-      url: `${watsonHost}/tone-analyzer/api`,
-      version: '2017-09-21'
-    }).tone({
-      text
-    }, (err: Error, result: any) => {
-      if (err) reject(err)
-      else resolve(result)
-    })
-  })
-  return Promise.all([nlu, tone]).then((results) => {
-    return { nlu: results[0], tone: results[1] }
-  })
+  async start() {
+    /** @todo Connection and credential check */
+  }
+  async shutdown() {}
+
+  /** Get results from Watson for Sentiment and Tone and format as NLU result */
+  async process (message: TextMessage) {
+    try {
+      const processed = await this.watson.analyse(message.toString())
+      this.bot.logger.debug(`[watson] process response: ${JSON.stringify(processed)}`)
+      const { nlu, tone } = processed
+      const results: NaturalLanguageResultsRaw = {}
+      if (nlu) {
+        results.sentiment = [{
+          id: nlu.sentiment.document.label,
+          score: nlu.sentiment.document.score
+        }]
+        results.phrases = []
+        for (let i in nlu.keywords) {
+          results.phrases.push({
+            name: nlu.keywords[i].text,
+            score: nlu.keywords[i].relevance
+          })
+        }
+        results.language = [{
+          id: nlu.language
+        }]
+      }
+      if (tone) {
+        results.tone = []
+        for (let i in tone.document_tone.tones) {
+          results.tone.push({
+            id: tone.document_tone.tones[i].tone_id,
+            name: tone.document_tone.tones[i].tone_name,
+            score: tone.document_tone.tones[i].score
+          })
+        }
+      }
+      this.bot.logger.debug(`[watson] process results: ${JSON.stringify(results)}`)
+      return results
+    } catch (err) {
+      this.bot.logger.error(`[watson] ${err.message}`)
+      return
+    }
+  }
 }
 
-/** Get results from Watson for Sentiment and Tone and format as NLU result */
-async function analyse (text: string): Promise<any> {
-  const results = await watsonAnalyze(text)
-  // @todo...refactor using NLU interface and helpers
-  
-  const nlu: any = {}
-  nlu.sentiment = [{
-    id: results.nlu.sentiment.document.label,
-    score: results.nlu.sentiment.document.score
-  }]
-
-  nlu.phrases = []
-  for (let i in results.nlu.keywords) {
-    console.log(results.nlu.keywords[i])
-    results.nlu.keywords.push({
-      name: results.nlu.keywords[i].text,
-      score: results.nlu.keywords[i].relevance
-    })
-  }
-
-  nlu.language = [{
-    id: results.nlu.language
-  }]
-
-  nlu.tone = []
-  for (let i in results.tone.document_tone.tones) {
-    nlu.tone.push({
-      id: results.tone.document_tone.tones[i].tone_id,
-      name: results.tone.document_tone.tones[i].tone_name,
-      score: results.tone.document_tone.tones[i].score
-    })
-  }
-
-  console.log(inspect(nlu, false, 2))
-  return nlu
-}
-
-/** Get the text to analyse from command line arg */
-const argv = yargs.option('text', {
-  alias: 't',
-  type: `string`,
-  describe: 'The text to analyse'
-}).config().argv
-
-if (!argv.text) throw new Error('Dev script requires "--text" argument to analyse')
-
-/** Execute on load */
-analyse(argv.text)
+/** Standard bBot adapter initialisation method */
+export const use = (bot: any) => new WatsonAdapter(bot)
