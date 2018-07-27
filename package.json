@@ -4,7 +4,7 @@
   "description": "NLU adapter for analysing bBot message sentiment with IBM's Watson Tone Analyzer",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "repository": "git@github.com:Amazebot/bbot-understand-watson-tone.git",
+  "repository": "https://github.com/Amazebot/bbot-understand-watson-tone.git",
   "author": "Tim Kinnane <tim.kinnane@amazebot.chat>",
   "license": "MIT",
   "private": false,
