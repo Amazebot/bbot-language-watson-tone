@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@rocket.chat/sdk@rocketchat/rocket.chat.js.sdk":
+"@rocket.chat/sdk@rocketchat/rocket.chat.js.sdk#master":
   version "0.2.2"
   resolved "https://codeload.github.com/rocketchat/rocket.chat.js.sdk/tar.gz/be6855e333907cef7a6a8154f189bba38da9ca84"
   dependencies:
@@ -21,12 +21,6 @@
 "@types/caseless@*":
   version "0.12.1"
   resolved "https://registry.yarnpkg.com/@types/caseless/-/caseless-0.12.1.tgz#9794c69c8385d0192acc471a540d1f8e0d16218a"
-
-"@types/chalk@^2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@types/chalk/-/chalk-2.2.0.tgz#b7f6e446f4511029ee8e3f43075fb5b73fbaa0ba"
-  dependencies:
-    chalk "*"
 
 "@types/csv-stringify@~1.4.2":
   version "1.4.2"
@@ -285,18 +279,18 @@ aws4@^1.6.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.7.0.tgz#d4d0e9b9dbfca77bf08eeb0a8a471550fe39e289"
 
-bbot@^0.0.0:
-  version "0.0.0"
-  resolved "https://registry.yarnpkg.com/bbot/-/bbot-0.0.0.tgz#92876244836b3372ccabd539a61f5afb7db38a22"
+bbot@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/bbot/-/bbot-0.0.2.tgz#5a34e24c47e56a1dbb6bd733bcdc9b4bcb09764d"
   dependencies:
-    "@rocket.chat/sdk" rocketchat/rocket.chat.js.sdk
-    "@types/chalk" "^2.2.0"
+    "@rocket.chat/sdk" rocketchat/rocket.chat.js.sdk#master
     "@types/inquirer" "^0.0.42"
     "@types/mongoose" "^5.0.14"
     "@types/node" "^9.4.6"
     "@types/winston" "^2.3.8"
     "@types/yargs" "^11.0.0"
     chalk "^2.4.1"
+    dotenv "^5.0.1"
     inquirer "^6.0.0"
     mongoose "^5.1.2"
     redis "^2.8.0"
@@ -329,7 +323,7 @@ caseless@~0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
 
-chalk@*, chalk@^2.0.0, chalk@^2.4.1:
+chalk@^2.0.0, chalk@^2.4.1:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.1.tgz#18c49ab16a037b6eb0152cc83e3471338215b66e"
   dependencies:
@@ -454,6 +448,10 @@ delayed-stream@~1.0.0:
 diff@^3.1.0:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/diff/-/diff-3.5.0.tgz#800c0dd1e0a8bfbc95835c202ad220fe317e5a12"
+
+dotenv@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-5.0.1.tgz#a5317459bd3d79ab88cff6e44057a6a3fbb1fcef"
 
 dotenv@^6.0.0:
   version "6.0.0"
@@ -800,8 +798,8 @@ mongoose-legacy-pluralize@1.0.2:
   resolved "https://registry.yarnpkg.com/mongoose-legacy-pluralize/-/mongoose-legacy-pluralize-1.0.2.tgz#3ba9f91fa507b5186d399fb40854bff18fb563e4"
 
 mongoose@^5.1.2:
-  version "5.2.3"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.2.3.tgz#667b92c394a6aa81c3c9f2f45f3a8f28cea28e9c"
+  version "5.2.4"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.2.4.tgz#52b3385bee9420cf6bbd7e4ebfb211523c37a9e3"
   dependencies:
     async "2.6.1"
     bson "~1.0.5"
@@ -1039,8 +1037,8 @@ run-async@^2.2.0:
     is-promise "^2.1.0"
 
 rxjs@^6.1.0:
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.2.1.tgz#246cebec189a6cbc143a3ef9f62d6f4c91813ca1"
+  version "6.2.2"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.2.2.tgz#eb75fa3c186ff5289907d06483a77884586e1cf9"
   dependencies:
     tslib "^1.9.0"
 

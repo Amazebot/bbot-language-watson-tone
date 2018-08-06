@@ -1,11 +1,11 @@
 import {
-  LanguageAdapter,
+  NLUAdapter,
   TextMessage,
   NaturalLanguageResultsRaw
 } from 'bbot'
 import { Watson } from './watson'
 
-export class WatsonAdapter extends LanguageAdapter {
+export class WatsonAdapter extends NLUAdapter {
   name = 'watson-tone-language-adapter'
   watson = new Watson({
     host: 'https://' + process.env.WATSON_SERVICE_HOSTNAME || 'gateway.watsonplatform.net',

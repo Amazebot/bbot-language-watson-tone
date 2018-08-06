@@ -1,10 +1,10 @@
 {
-  "name": "bbot-understand-watson-tone",
+  "name": "bbot-watson-tone-nlu",
   "version": "0.0.2",
   "description": "NLU adapter for analysing bBot message sentiment with IBM's Watson Tone Analyzer",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "repository": "https://github.com/Amazebot/bbot-understand-watson-tone.git",
+  "repository": "https://github.com/Amazebot/bbot-watson-tone-nlu-adapter.git",
   "author": "Tim Kinnane <tim.kinnane@amazebot.chat>",
   "license": "MIT",
   "private": false,
@@ -34,6 +34,7 @@
   },
   "devDependencies": {
     "@types/yargs": "^11.1.0",
+    "bbot": "^0.1.0",
     "dotenv": "^6.0.0",
     "ts-node": "^7.0.0",
     "typescript": "^2.9.2",
@@ -45,6 +46,6 @@
     "start": "node dist"
   },
   "peerDependencies": {
-    "bbot": "^0.0.0"
+    "bbot": "^0.1.0"
   }
 }
