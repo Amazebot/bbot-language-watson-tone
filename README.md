@@ -3,4 +3,4 @@ NLU adapter for analysing bBot message sentiment with IBM's Watson Tone Analyzer
 
 ### `~(O_O)~`
 
-Visit [bBot.chat](http://bbot.chat/) for more information on the project.
+Visit [bBot.chat](http://bbot.chat/) for more information on the converstion engine.
