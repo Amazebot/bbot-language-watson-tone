@@ -1,17 +1,33 @@
-import {
-  NLUAdapter,
-  TextMessage,
-  NaturalLanguageResultsRaw
-} from 'bbot'
+import * as bBot from 'bbot'
 import { Watson } from './watson'
 
-export class WatsonAdapter extends NLUAdapter {
+export class WatsonAdapter extends bBot.NLUAdapter {
   name = 'watson-tone-language-adapter'
-  watson = new Watson({
-    host: 'https://' + process.env.WATSON_SERVICE_HOSTNAME || 'gateway.watsonplatform.net',
-    nluKey: process.env.WATSON_NATURAL_LANGUAGE_UNDERSTANDING_APIKEY,
-    toneKey: process.env.WATSON_TONE_ANALYZER_APIKEY
-  })
+  watson: Watson
+
+  constructor (bot: typeof bBot) {
+    super(bot)
+    bot.settings.extend({
+      'watson-host': {
+        type: 'string',
+        description: 'Https gateway. Override default for country specific.',
+        default: 'https://gateway.watsonplatform.net'
+      },
+      'watson-nlu-key': {
+        type: 'string',
+        description: 'IBM cloud API key for Natural Language Understanding',
+      },
+      'watson-tone-key': {
+        type: 'string',
+        description: 'IBM cloud API key for Tone Analysis',
+      }
+    })
+    this.watson = new Watson({
+      host: bot.settings.get('watson-host'),
+      nluKey: bot.settings.get('watson-nlu-key'),
+      toneKey: bot.settings.get('watson-tone-key')
+    })
+  }
 
   async start() {
     /** @todo Connection and credential check */
@@ -19,39 +35,37 @@ export class WatsonAdapter extends NLUAdapter {
   async shutdown() {}
 
   /** Get results from Watson for Sentiment and Tone and format as NLU result */
-  async process (message: TextMessage) {
+  async process (message: bBot.TextMessage) {
     try {
       const processed = await this.watson.analyse(message.toString())
       this.bot.logger.debug(`[watson] process response: ${JSON.stringify(processed)}`)
-      const { nlu, tone } = processed
-      const results: NaturalLanguageResultsRaw = {}
-      if (nlu) {
+      const results: bBot.NaturalLanguageResultsRaw = {}
+      if (processed.nlu) {
         results.sentiment = [{
-          id: nlu.sentiment.document.label,
-          score: nlu.sentiment.document.score
+          id: processed.nlu.sentiment.document.label,
+          score: processed.nlu.sentiment.document.score
         }]
         results.phrases = []
-        for (let i in nlu.keywords) {
+        for (let i in processed.nlu.keywords) {
           results.phrases.push({
-            name: nlu.keywords[i].text,
-            score: nlu.keywords[i].relevance
+            name: processed.nlu.keywords[i].text,
+            score: processed.nlu.keywords[i].relevance
           })
         }
         results.language = [{
-          id: nlu.language
+          id: processed.nlu.language
         }]
       }
-      if (tone) {
+      if (processed.tone) {
         results.tone = []
-        for (let i in tone.document_tone.tones) {
+        for (let i in processed.tone.document_tone.tones) {
           results.tone.push({
-            id: tone.document_tone.tones[i].tone_id,
-            name: tone.document_tone.tones[i].tone_name,
-            score: tone.document_tone.tones[i].score
+            id: processed.tone.document_tone.tones[i].tone_id,
+            name: processed.tone.document_tone.tones[i].tone_name,
+            score: processed.tone.document_tone.tones[i].score
           })
         }
       }
-      this.bot.logger.debug(`[watson] process results: ${JSON.stringify(results)}`)
       return results
     } catch (err) {
       this.bot.logger.error(`[watson] ${err.message}`)
@@ -61,4 +75,4 @@ export class WatsonAdapter extends NLUAdapter {
 }
 
 /** Standard bBot adapter initialisation method */
-export const use = (bot: any) => new WatsonAdapter(bot)
+module.exports.use = (bot: typeof bBot) => new WatsonAdapter(bot)

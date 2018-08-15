@@ -10,7 +10,9 @@ export class Watson {
   settings: IWatson
 
   constructor (options: IWatson) {
-    if (!options.nluKey && !options.toneKey) throw new Error('[watson] Language analysis requires key for `natural-language-understanding` and/or `tone-analyzer` service.')
+    if (!options.nluKey && !options.toneKey) {
+      throw new Error('[watson] No API key/s for Watson cloud services')
+    }
     this.settings = Object.assign({}, options)
   }
 
